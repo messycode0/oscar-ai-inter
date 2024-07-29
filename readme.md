@@ -22,7 +22,7 @@ This repository contains a simple AI interface using [Ollama](https://ollama.com
 1. Clone the repository:
 
     ```bash
-    git clone https://github.com/messycode0/oscar-ai-interface.git
+    git clone https://github.com/messycode0/oscar-ai-inter.git
     cd oscar-ai-interface
     ```
 
