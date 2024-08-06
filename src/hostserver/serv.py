@@ -1,12 +1,15 @@
 from flask import Flask
 import request
 import jsonify
-import ollama
+
+from oscar_api.oscar import Oscar  
 
 app = Flask(__name__)
 
 #Default port is 5000
 server_port = 5000
+
+oscar = Oscar()
 
 @app.route('/ask', methods=['POST'])
 def ask():
@@ -17,13 +20,7 @@ def ask():
     return jsonify({'answer': answer})
 
 def process_with_ollama(question):
-    response = ollama.chat(model='llama3', messages=[
-    {
-        'role': 'user',
-        'content': f'You are an ai named Oscar, you will get a promt, make sure you answer very simple, and very short, dont want something very long... Your input is: {input}',
-    },
-    ])
-    return response['message']['content']
+    return oscar.io_call_ol_local(question)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=server_port)

@@ -1,8 +1,9 @@
-import ollama
 import sys
 import time
 import random
-import requests
+
+# Import main Oscar API
+import oscar_api.oscar
 
 # yes
 is_remote = False
@@ -16,39 +17,29 @@ def main(argv):
     print(argv)
 
     if argv[1] == "-r" or argv[1] == "--remote":
+        oscar = oscar_api.oscar.Oscar(serverip, server_port)
         is_remote = True
+    else:
+        oscar = oscar_api.oscar.Oscar()
 
     while exited == False:
         line_break("input=")
         input = str(input("Oscar >>"))
+
         if input == "/exit":
             exited == True
             break
         line_break("output")
+
         if is_remote:
-            slow_type(io_call_ol_remote(input))
+            slow_type(oscar.io_call_ol_remote(input))
         else:
-            slow_type(io_call_ol_local(input))
+            slow_type(oscar.io_call_ol_local(input))
             
 
         line_break()
 
     pass
-
-def io_call_ol_local(input): 
-    response = ollama.chat(model='llama3', messages=[
-    {
-        'role': 'user',
-        'content': f'You are an ai named Oscar, you will get a promt, make sure you answer very simple, and very short, dont want something very long... Your input is: {input}',
-    },
-    ])
-    return response['message']['content']
-
-def io_call_ol_remote(input):
-    url = f'http://{serverip}:{server_port}/ask'
-    payload = {'question': input}
-    response = requests.post(url, json=payload)
-    return response.json().get('answer')
 
 def line_break(text):
     print(f"==============={text}===============")
